@@ -11,6 +11,12 @@ contract Vault is ERC4626,Ownable{
 
     uint256 public claimsResolved;
     uint256 public totalClaims;
+
+    enum PolicyStatus {
+      Unclaimed,
+      Expired,
+      Claimed
+    }
     
     // Insurance policy
     struct Policy {
@@ -24,7 +30,7 @@ contract Vault is ERC4626,Ownable{
 
     struct PurchaseDetails {
       uint256 purchaseTimestamp;
-      bool claimed;
+      PolicyStatus status;
     }
 
     struct Claim {
@@ -90,7 +96,7 @@ contract Vault is ERC4626,Ownable{
       IERC20(asset()).safeTransferFrom(msg.sender, address(this), policy.price);
       PurchaseDetails storage purchaseDetails = userPurchaseDetails[msg.sender][policyIndex];
       purchaseDetails.purchaseTimestamp = block.timestamp;
-      purchaseDetails.claimed = false;
+      purchaseDetails.status = PolicyStatus.Unclaimed;
     }
 
     function fileClaim(uint256 _policyId, uint256 _claimAmount, bytes memory _claim) public {
@@ -110,7 +116,7 @@ contract Vault is ERC4626,Ownable{
       IERC20(asset()).safeTransferFrom(msg.sender, address(this), policy.price);
       PurchaseDetails storage purchaseDetails = userPurchaseDetails[msg.sender][policyId];
       purchaseDetails.purchaseTimestamp = block.timestamp;
-      purchaseDetails.claimed = false;
+      purchaseDetails.status = PolicyStatus.Unclaimed;
     }
 
     function attestClaim(uint256 claimIndex) public onlyUnderwriter {
@@ -119,18 +125,23 @@ contract Vault is ERC4626,Ownable{
 
       Policy memory policy = policies[claim.policyId - 1];
 
-      if((claim.totalApprovals >= policy.minUnderwriters) && (userPurchaseDetails[msg.sender][policy.id].claimed == false) && (block.timestamp - userPurchaseDetails[msg.sender][policy.id].purchaseTimestamp < policy.validityPeriod)) {
-        if(claim.claimAmount <= policy.price) {
-          IERC20(asset()).safeTransfer(claim.claimAccount, policy.price);
-        } else {
-          if(claim.claimAmount < policy.maxClaim) {
-            IERC20(asset()).safeTransfer(claim.claimAccount, claim.claimAmount);
+      if((claim.totalApprovals >= policy.minUnderwriters) && (userPurchaseDetails[msg.sender][policy.id].status == PolicyStatus.Unclaimed)) {
+        if (block.timestamp - userPurchaseDetails[msg.sender][policy.id].purchaseTimestamp < policy.validityPeriod) {
+          if(claim.claimAmount <= policy.price) {
+            IERC20(asset()).safeTransfer(claim.claimAccount, policy.price);
           } else {
-            IERC20(asset()).safeTransfer(claim.claimAccount, claim.claimAmount);
+            if(claim.claimAmount < policy.maxClaim) {
+              IERC20(asset()).safeTransfer(claim.claimAccount, claim.claimAmount);
+            } else {
+              IERC20(asset()).safeTransfer(claim.claimAccount, claim.claimAmount);
+            }
           }
+
+          userPurchaseDetails[msg.sender][policy.id].status = PolicyStatus.Claimed;
+        } else {
+          userPurchaseDetails[msg.sender][policy.id].status = PolicyStatus.Expired;
         }
 
-        userPurchaseDetails[msg.sender][policy.id].claimed = true;
         claimsResolved += 1;
       }
     }
