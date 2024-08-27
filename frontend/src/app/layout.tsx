@@ -10,13 +10,9 @@ import { Providers } from "./providers";
 const open_sans = Open_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Next-Web3-Boilerplate",
-  applicationName: "Next Web3 Boilerplate",
-  description: "Next.js Web3 boilerplate built on Wagmi, Viem, and Rainbow",
-  authors: {
-    name: "Pedrojok01",
-    url: "https://github.com/Pedrojok01/Next-Web3-Boilerplate",
-  },
+  title: "De-insurance",
+  applicationName: "De-insurance app",
+  description: "Decentralized insurance protocol for web3",
   icons: "favicon.ico",
   manifest: "site.webmanifest",
 };
