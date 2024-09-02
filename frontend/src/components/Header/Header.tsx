@@ -5,10 +5,9 @@ import { HStack, Heading } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 
-import { useWindowSize } from "@/hooks/useWindowSize";
-
 import logo from "../../../public/img/logo_transparent.png";
 import { DarkModeButton } from "../DarkModeButton";
+import { useWindowSize } from "@/hooks/useWindowSize";
 
 const Header: FC = () => {
   const { isTablet } = useWindowSize();
