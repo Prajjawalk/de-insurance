@@ -2,11 +2,17 @@
 pragma solidity ^0.8.13;
 
 import {Script, console} from "forge-std/Script.sol";
+import "../src/PoolFactory.sol";
 
-contract CounterScript is Script {
+contract PoolFactoryScript is Script {
     function setUp() public {}
 
     function run() public {
-        vm.broadcast();
+        vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
+
+        new PoolFactory();
+
+        vm.stopBroadcast();
+
     }
 }
