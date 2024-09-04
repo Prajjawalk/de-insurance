@@ -16,8 +16,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import styles from "@/styles/mainPane.module.css";
 import { PolicyClaim } from "../Modal/PolicyClaim";
+import styles from "@/styles/mainPane.module.css";
 
 export const ClaimProtection: FC = () => {
   const { colorMode } = useColorMode();
