@@ -4,13 +4,6 @@ import {
   Box,
   Heading,
   Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
   Flex,
   TableContainer,
   Table,
@@ -18,20 +11,39 @@ import {
   Tr,
   Th,
   Tbody,
-  Td,
   useDisclosure,
   useColorMode,
 } from "@chakra-ui/react";
+import { BaseError, useChainId, useReadContract } from "wagmi";
 
-import { Deposit } from "../Modal/Deposit";
-import { Withdraw } from "../Modal/Withdraw";
+import poolFactoryAbi from "../../../artifacts/PoolFactory.sol/PoolFactory.json";
+import { CreatePool } from "../Modal/CreatePool";
+import { PoolDetails } from "../PoolDetails/PoolDetails";
+import { broadCastDetails } from "@/broadcastDetails";
 import styles from "@/styles/mainPane.module.css";
 
 export const ProvideProtection: FC = () => {
   const { colorMode } = useColorMode();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const deposit = useDisclosure();
-  const withdraw = useDisclosure();
+  const createPool = useDisclosure();
+
+  const chainId = useChainId();
+
+  const { data, error, isPending } = useReadContract({
+    abi: poolFactoryAbi.abi,
+    address: broadCastDetails.PoolFactory[
+      chainId as unknown as keyof typeof broadCastDetails.PoolFactory
+    ] as `0x${string}`,
+    functionName: "getAllPools",
+  });
+
+  if (isPending) return <div>Loading...</div>;
+
+  if (error) return <div>Error: {(error as unknown as BaseError).details || error.message}</div>;
+
+  const poolData = (data as Array<`0x${string}`>).map((i: `0x${string}`, idx: number) => (
+    <PoolDetails address={i} key={idx} />
+  ));
+
   return (
     <Box
       className={styles.container}
@@ -41,28 +53,12 @@ export const ProvideProtection: FC = () => {
         Insurance pools
       </Heading>
       <Flex justify={"right"} width={"90%"}>
-        <Button colorScheme="blue" size="md" onClick={onOpen}>
+        <Button colorScheme="blue" size="md" onClick={createPool.onOpen}>
           Create Pool
         </Button>
       </Flex>
-      <Deposit isOpen={deposit.isOpen} onClose={deposit.onClose} />
-      <Withdraw isOpen={withdraw.isOpen} onClose={withdraw.onClose} />
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>This is modal body</ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant="ghost">Secondary Action</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <CreatePool isOpen={createPool.isOpen} onClose={createPool.onClose} />
       <Flex className={styles.content}>
         <TableContainer width="90%">
           <Table variant="striped">
@@ -78,65 +74,7 @@ export const ProvideProtection: FC = () => {
                 <Th></Th>
               </Tr>
             </Thead>
-            <Tbody>
-              <Tr>
-                <Td>
-                  <Flex gap={"2"}>
-                    <img width={"20"} height={"20"} src="usdc_logo.png" alt="USDC" />
-                    {"USDC"}
-                  </Flex>
-                </Td>
-                <Td>Ethereum</Td>
-                <Td>$1.5B</Td>
-                <Td>5.7%</Td>
-                <Td>5.99%</Td>
-                <Td>6.5%</Td>
-                <Td>
-                  <Button onClick={deposit.onOpen}>Deposit</Button>
-                </Td>
-                <Td>
-                  <Button onClick={withdraw.onOpen}>Withdraw</Button>
-                </Td>
-              </Tr>
-              <Tr>
-                <Td>
-                  <Flex gap={"2"}>
-                    <img width={"20"} height={"20"} src="usdc_logo.png" alt="USDC" />
-                    {"USDC"}
-                  </Flex>
-                </Td>
-                <Td>Ethereum</Td>
-                <Td>$1.5B</Td>
-                <Td>5.7%</Td>
-                <Td>5.99%</Td>
-                <Td>6.5%</Td>
-                <Td>
-                  <Button onClick={deposit.onOpen}>Deposit</Button>
-                </Td>
-                <Td>
-                  <Button onClick={withdraw.onOpen}>Withdraw</Button>
-                </Td>
-              </Tr>
-              <Tr>
-                <Td>
-                  <Flex gap={"2"}>
-                    <img width={"20"} height={"20"} src="usdc_logo.png" alt="USDC" />
-                    {"USDC"}
-                  </Flex>
-                </Td>
-                <Td>Ethereum</Td>
-                <Td>$1.5B</Td>
-                <Td>5.7%</Td>
-                <Td>5.99%</Td>
-                <Td>6.5%</Td>
-                <Td>
-                  <Button onClick={deposit.onOpen}>Deposit</Button>
-                </Td>
-                <Td>
-                  <Button onClick={withdraw.onOpen}>Withdraw</Button>
-                </Td>
-              </Tr>
-            </Tbody>
+            <Tbody>{poolData}</Tbody>
           </Table>
         </TableContainer>
       </Flex>

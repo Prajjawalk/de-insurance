@@ -16,6 +16,7 @@ import {
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  address: string;
 }
 
 export const Deposit: FC<Props> = (props) => {
