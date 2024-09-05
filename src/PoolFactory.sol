@@ -15,4 +15,8 @@ contract PoolFactory {
     emit PoolCreated(msg.sender, address(pool));
     return pool;
   }
+
+  function getAllPools() public view returns(Vault[] memory) {
+    return insurancePools;
+  }
 }

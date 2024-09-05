@@ -193,6 +193,10 @@ contract Vault is ERC4626,Ownable{
         return shareHolders[_user];
     }
 
+    function underlyingTokenSymbol() public view returns (string memory) {
+      return ERC20(asset()).symbol();
+    }
+
     function _decimalsOffset() internal pure override returns (uint8) {
         return 3;
     }

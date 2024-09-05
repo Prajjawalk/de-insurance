@@ -2,15 +2,15 @@
 pragma solidity ^0.8.13;
 
 import {Script, console} from "forge-std/Script.sol";
-import "../src/mocks/USDC.sol";
+import "../src/mocks/wETH.sol";
 
-contract USDCScript is Script {
+contract WETHScript is Script {
     function setUp() public {}
 
     function run() public {
         vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
-        new USDC(1000000000000000000000);
+        new WETH(1000000000000000000000);
 
         vm.stopBroadcast();
 

@@ -45,12 +45,22 @@ export const PoolDetails: FC<Props> = (props) => {
   if (poolData.error)
     return <div>Error: {(poolData.error as BaseError).shortMessage || poolData.error.message}</div>;
 
-  const [, totalAssets, symbol, underlyingTokenSymbol] = poolData.data || [];
+  const [asset, totalAssets, symbol, underlyingTokenSymbol] = poolData.data || [];
 
   return (
     <>
-      <Deposit isOpen={deposit.isOpen} onClose={deposit.onClose} address={props.address} />
-      <Withdraw isOpen={withdraw.isOpen} onClose={withdraw.onClose} />
+      <Deposit
+        isOpen={deposit.isOpen}
+        onClose={deposit.onClose}
+        address={props.address}
+        underlyingAssetAddress={asset.result as `0x${string}`}
+      />
+      <Withdraw
+        isOpen={withdraw.isOpen}
+        onClose={withdraw.onClose}
+        address={props.address}
+        underlyingAssetAddress={asset.result as `0x${string}`}
+      />
       <Tr>
         <Td>
           <Flex gap={"2"}>
