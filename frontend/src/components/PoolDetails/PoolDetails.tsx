@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { useEffect, useState, type FC } from "react";
 
 import { Tr, Td, Flex, Button, useDisclosure } from "@chakra-ui/react";
 import { BaseError, useAccount, useReadContracts } from "wagmi";
@@ -9,12 +9,16 @@ import { Withdraw } from "../Modal/Withdraw";
 
 interface Props {
   address: `0x${string}`;
+  setpage: (name: string) => void;
+  setPool: (name: string) => void;
 }
 
 export const PoolDetails: FC<Props> = (props) => {
-  const { chain } = useAccount();
+  const { address, chain } = useAccount();
   const deposit = useDisclosure();
   const withdraw = useDisclosure();
+  const [poolOwner, setPoolOwner] = useState<string>();
+
   const poolData = useReadContracts({
     contracts: [
       {
@@ -37,8 +41,19 @@ export const PoolDetails: FC<Props> = (props) => {
         address: props.address,
         functionName: "underlyingTokenSymbol",
       },
+      {
+        abi: vaultAbi.abi,
+        address: props.address,
+        functionName: "owner",
+      },
     ],
   });
+
+  useEffect(() => {
+    if (poolData.isSuccess && poolData.data[4].result) {
+      setPoolOwner(String(poolData.data[4].result));
+    }
+  }, [poolData.data, poolData.isSuccess]);
 
   if (poolData.isPending) return <div>Loading...</div>;
 
@@ -79,6 +94,18 @@ export const PoolDetails: FC<Props> = (props) => {
         <Td>
           <Button onClick={withdraw.onOpen}>Withdraw</Button>
         </Td>
+        {poolOwner == address ? (
+          <Td>
+            <Button
+              onClick={() => {
+                props.setpage("manage");
+                props.setPool(props.address as string);
+              }}
+            >
+              Manage
+            </Button>
+          </Td>
+        ) : null}
       </Tr>
     </>
   );

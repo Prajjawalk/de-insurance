@@ -10,22 +10,60 @@ import {
   Tr,
   Th,
   Tbody,
-  Td,
   useColorMode,
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
+import { BaseError, useReadContract } from "wagmi";
 
+import vaultAbi from "../../../artifacts/Vault.sol/Vault.json";
 import { AddUnderwriter } from "../Modal/AddUnderwriter";
 import { CreatePolicy } from "../Modal/CreatePolicy";
-import { PolicyDetails } from "../Modal/PolicyDetails";
+import { ManagePolicyDetails } from "../PolicyDetails/ManagePolicyDetails";
 import styles from "@/styles/mainPane.module.css";
 
-export const ManagePolicies: FC = () => {
+interface Props {
+  setpage: (name: string) => void;
+  pool: string;
+}
+
+interface PolicyData {
+  id: bigint;
+  maxClaim: bigint;
+  minUnderwriters: bigint;
+  price: bigint;
+  terms: string;
+  validityPeriod: bigint;
+}
+
+export const ManagePolicies: FC<Props> = (props) => {
   const { colorMode } = useColorMode();
   const createPolicy = useDisclosure();
-  const policyDetails = useDisclosure();
   const underwriter = useDisclosure();
+
+  // const chainId = useChainId();
+
+  const { data, error, isPending } = useReadContract({
+    abi: vaultAbi.abi,
+    address: props.pool as `0x${string}`,
+    functionName: "getAllPolicies",
+  });
+
+  if (isPending) return <div>Loading...</div>;
+
+  if (error) return <div>Error: {(error as unknown as BaseError).details || error.message}</div>;
+
+  const policyData = (data as Array<PolicyData>).map((i: PolicyData, idx: number) => (
+    <ManagePolicyDetails
+      poolAddress={props.pool as `0x${string}`}
+      key={idx}
+      price={i.price}
+      validity={i.validityPeriod}
+      maxClaim={i.maxClaim}
+      underwriters={i.minUnderwriters}
+      tnc={i.terms}
+    />
+  ));
 
   return (
     <Box
@@ -35,11 +73,18 @@ export const ManagePolicies: FC = () => {
       <Heading as="h2" fontSize={"2rem"} mb={10} className="text-shadow">
         Manage Policies
       </Heading>
-      <PolicyDetails isOpen={policyDetails.isOpen} onClose={policyDetails.onClose} />
-      <CreatePolicy isOpen={createPolicy.isOpen} onClose={createPolicy.onClose} />
+      {/* <PolicyDetails isOpen={policyDetails.isOpen} onClose={policyDetails.onClose} /> */}
+      <CreatePolicy
+        isOpen={createPolicy.isOpen}
+        onClose={createPolicy.onClose}
+        address={props.pool}
+      />
       <AddUnderwriter isOpen={underwriter.isOpen} onClose={underwriter.onClose} />
 
-      <Flex justify={"right"} width={"90%"}>
+      <Flex width={"90%"} mx={"auto"} justifyContent={"space-between"}>
+        <Button colorScheme="blue" size="md" onClick={() => props.setpage("provide")}>
+          Back
+        </Button>
         <Button colorScheme="blue" size="md" onClick={createPolicy.onOpen}>
           Create New Policy
         </Button>
@@ -49,8 +94,6 @@ export const ManagePolicies: FC = () => {
           <Table variant="striped">
             <Thead>
               <Tr>
-                <Th>Token</Th>
-                <Th>Chain</Th>
                 <Th>Price</Th>
                 <Th>Validity</Th>
                 <Th>Max Claim</Th>
@@ -59,65 +102,7 @@ export const ManagePolicies: FC = () => {
                 <Th></Th>
               </Tr>
             </Thead>
-            <Tbody>
-              <Tr>
-                <Td>
-                  <Flex gap={"2"}>
-                    <img width={"20"} height={"20"} src="usdc_logo.png" alt="USDC" />
-                    {"USDC"}
-                  </Flex>
-                </Td>
-                <Td>Ethereum</Td>
-                <Td>Active</Td>
-                <Td>30 Days</Td>
-                <Td>10000</Td>
-                <Td>5</Td>
-                <Td>
-                  <Button onClick={policyDetails.onOpen}>Details</Button>
-                </Td>
-                <Td>
-                  <Button onClick={underwriter.onOpen}>Add Underwriter</Button>
-                </Td>
-              </Tr>
-              <Tr>
-                <Td>
-                  <Flex gap={"2"}>
-                    <img width={"20"} height={"20"} src="usdc_logo.png" alt="USDC" />
-                    {"USDC"}
-                  </Flex>
-                </Td>
-                <Td>Ethereum</Td>
-                <Td>Active</Td>
-                <Td>30 Days</Td>
-                <Td>10000</Td>
-                <Td>5</Td>
-                <Td>
-                  <Button onClick={policyDetails.onOpen}>Details</Button>
-                </Td>
-                <Td>
-                  <Button onClick={underwriter.onOpen}>Add Underwriter</Button>
-                </Td>
-              </Tr>
-              <Tr>
-                <Td>
-                  <Flex gap={"2"}>
-                    <img width={"20"} height={"20"} src="usdc_logo.png" alt="USDC" />
-                    {"USDC"}
-                  </Flex>
-                </Td>
-                <Td>Ethereum</Td>
-                <Td>Active</Td>
-                <Td>30 Days</Td>
-                <Td>10000</Td>
-                <Td>5</Td>
-                <Td>
-                  <Button onClick={policyDetails.onOpen}>Details</Button>
-                </Td>
-                <Td>
-                  <Button onClick={underwriter.onOpen}>Add Underwriter</Button>
-                </Td>
-              </Tr>
-            </Tbody>
+            <Tbody>{policyData}</Tbody>
           </Table>
         </TableContainer>
       </Flex>

@@ -22,7 +22,12 @@ import { PoolDetails } from "../PoolDetails/PoolDetails";
 import { broadCastDetails } from "@/broadcastDetails";
 import styles from "@/styles/mainPane.module.css";
 
-export const ProvideProtection: FC = () => {
+interface Props {
+  setpage: (name: string) => void;
+  setPool: (name: string) => void;
+}
+
+export const ProvideProtection: FC<Props> = (props) => {
   const { colorMode } = useColorMode();
   const createPool = useDisclosure();
 
@@ -41,7 +46,7 @@ export const ProvideProtection: FC = () => {
   if (error) return <div>Error: {(error as unknown as BaseError).details || error.message}</div>;
 
   const poolData = (data as Array<`0x${string}`>).map((i: `0x${string}`, idx: number) => (
-    <PoolDetails address={i} key={idx} />
+    <PoolDetails address={i} key={idx} setpage={props.setpage} setPool={props.setPool} />
   ));
 
   return (
@@ -70,6 +75,7 @@ export const ProvideProtection: FC = () => {
                 <Th>24h APY</Th>
                 <Th>7D APY</Th>
                 <Th>30D APY</Th>
+                <Th></Th>
                 <Th></Th>
                 <Th></Th>
               </Tr>

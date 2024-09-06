@@ -11,6 +11,7 @@ import styles from "@/styles/mainPane.module.css";
 
 const MainPane: FC = () => {
   const [page, setPage] = useState("buy");
+  const [pool, setPool] = useState<string>();
 
   return (
     <Flex alignItems="start" gap="1rem" margin="auto">
@@ -30,13 +31,13 @@ const MainPane: FC = () => {
       </Flex>
       <Flex className={styles.content}>
         {page == "provide" ? (
-          <ProvideProtection />
+          <ProvideProtection setpage={setPage} setPool={setPool} />
         ) : page == "buy" ? (
           <BuyProtection />
         ) : page == "claim" ? (
           <ClaimProtection />
         ) : (
-          <ManagePolicies />
+          <ManagePolicies setpage={setPage} pool={pool as string} />
         )}
       </Flex>
     </Flex>
