@@ -16,50 +16,6 @@ interface Props {
 }
 
 export const ManagePolicyDetails: FC<Props> = (props) => {
-  // const poolData = useReadContracts({
-  //   contracts: [
-  //     {
-  //       abi: vaultAbi.abi,
-  //       address: props.address,
-  //       functionName: "asset",
-  //     },
-  //     {
-  //       abi: vaultAbi.abi,
-  //       address: props.address,
-  //       functionName: "totalAssets",
-  //     },
-  //     {
-  //       abi: vaultAbi.abi,
-  //       address: props.address,
-  //       functionName: "symbol",
-  //     },
-  //     {
-  //       abi: vaultAbi.abi,
-  //       address: props.address,
-  //       functionName: "underlyingTokenSymbol",
-  //     },
-  //     {
-  //       abi: vaultAbi.abi,
-  //       address: props.address,
-  //       functionName: "owner",
-  //     },
-  //   ],
-  // });
-
-  // useEffect(() => {
-  //   if (poolData.isSuccess && poolData.data[4].result) {
-  //     console.log(poolData.data[4].result);
-  //     setPoolOwner(String(poolData.data[4].result));
-  //   }
-  // }, [poolData.data, poolData.isSuccess]);
-
-  // if (poolData.isPending) return <div>Loading...</div>;
-
-  // if (poolData.error)
-  //   return <div>Error: {(poolData.error as BaseError).shortMessage || poolData.error.message}</div>;
-
-  // const [asset, totalAssets, symbol, underlyingTokenSymbol] = poolData.data || [];
-
   const policyDetails = useDisclosure();
   const underwriter = useDisclosure();
   const policyTnc = fromHex(props.tnc as `0x${string}`, "string");
@@ -71,7 +27,11 @@ export const ManagePolicyDetails: FC<Props> = (props) => {
         onClose={policyDetails.onClose}
         details={policyTnc}
       />
-      <AddUnderwriter isOpen={underwriter.isOpen} onClose={underwriter.onClose} />
+      <AddUnderwriter
+        isOpen={underwriter.isOpen}
+        onClose={underwriter.onClose}
+        poolAddress={props.poolAddress}
+      />
       <Tr>
         <Td>{String(props.price)}</Td>
         <Td>{String(props.validity / 86400n)} Days</Td>

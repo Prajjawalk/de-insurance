@@ -17,7 +17,6 @@ import {
 import { BaseError, useReadContract } from "wagmi";
 
 import vaultAbi from "../../../artifacts/Vault.sol/Vault.json";
-import { AddUnderwriter } from "../Modal/AddUnderwriter";
 import { CreatePolicy } from "../Modal/CreatePolicy";
 import { ManagePolicyDetails } from "../PolicyDetails/ManagePolicyDetails";
 import styles from "@/styles/mainPane.module.css";
@@ -39,7 +38,6 @@ interface PolicyData {
 export const ManagePolicies: FC<Props> = (props) => {
   const { colorMode } = useColorMode();
   const createPolicy = useDisclosure();
-  const underwriter = useDisclosure();
 
   // const chainId = useChainId();
 
@@ -79,7 +77,6 @@ export const ManagePolicies: FC<Props> = (props) => {
         onClose={createPolicy.onClose}
         address={props.pool}
       />
-      <AddUnderwriter isOpen={underwriter.isOpen} onClose={underwriter.onClose} />
 
       <Flex width={"90%"} mx={"auto"} justifyContent={"space-between"}>
         <Button colorScheme="blue" size="md" onClick={() => props.setpage("provide")}>
