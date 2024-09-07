@@ -12,7 +12,7 @@ import {
 } from "@rainbow-me/rainbowkit/wallets";
 import { defineChain, type Transport } from "viem";
 import { createConfig, http } from "wagmi";
-import { sepolia, hederaTestnet, rootstockTestnet } from "wagmi/chains";
+import { sepolia, hederaTestnet, rootstockTestnet, morphHolesky } from "wagmi/chains";
 
 const walletConnectProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
 
@@ -65,6 +65,7 @@ const transports: Record<number, Transport> = {
   [hederaTestnet.id]: http(),
   [rootstockTestnet.id]: http(),
   [kinto.id]: http(),
+  [morphHolesky.id]: http(),
 };
 export const wagmiConfig = createConfig({
   chains: [sepolia, hederaTestnet, rootstockTestnet, kinto],
