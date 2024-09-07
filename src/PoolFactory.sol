@@ -11,7 +11,7 @@ contract PoolFactory {
   function createNewPool(ERC20 _asset, string memory _name, string memory _symbol) public returns(Vault) {
     Vault pool = new Vault(_asset, _name, _symbol);
     insurancePools.push(pool);
-    
+    pool.transferOwnership(msg.sender);
     emit PoolCreated(msg.sender, address(pool));
     return pool;
   }

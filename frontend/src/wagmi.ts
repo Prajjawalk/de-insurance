@@ -10,27 +10,9 @@ import {
   safeWallet,
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-import type { Transport } from "viem";
+import { defineChain, type Transport } from "viem";
 import { createConfig, http } from "wagmi";
-import {
-  mainnet,
-  sepolia,
-  polygon,
-  polygonMumbai,
-  optimism,
-  optimismGoerli,
-  arbitrum,
-  arbitrumGoerli,
-  linea,
-  lineaTestnet,
-  base,
-  baseGoerli,
-  bsc,
-  bscTestnet,
-} from "wagmi/chains";
-
-import linea_logo from "../public/img/linea_logo.png";
-import lineaTesnet_logo from "../public/img/lineaTesnet_logo.png";
+import { sepolia, hederaTestnet, rootstockTestnet } from "wagmi/chains";
 
 const walletConnectProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
 
@@ -59,42 +41,33 @@ const connectors = connectorsForWallets(
   { appName: "Next-Web3-Boilerplate", projectId: walletConnectProjectId },
 );
 
-const customLinea = { ...linea, iconUrl: linea_logo.src };
-const customLineaTestnet = { ...lineaTestnet, iconUrl: lineaTesnet_logo.src };
+const kinto = defineChain({
+  id: 7887,
+  name: "Kinto Mainnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.kinto-rpc.com"],
+      webSocket: ["wss://rpc.kinto.xyz/ws"],
+    },
+  },
+  blockExplorers: {
+    default: { name: "Explorer", url: "https://explorer.kinto.xyz" },
+  },
+});
 
 const transports: Record<number, Transport> = {
-  [mainnet.id]: http(),
   [sepolia.id]: http(),
-  [polygon.id]: http(),
-  [polygonMumbai.id]: http(),
-  [optimism.id]: http(),
-  [optimismGoerli.id]: http(),
-  [arbitrum.id]: http(),
-  [arbitrumGoerli.id]: http(),
-  [linea.id]: http(),
-  [lineaTestnet.id]: http(),
-  [base.id]: http(),
-  [baseGoerli.id]: http(),
-  [bsc.id]: http(),
-  [bscTestnet.id]: http(),
+  [hederaTestnet.id]: http(),
+  [rootstockTestnet.id]: http(),
+  [kinto.id]: http(),
 };
 export const wagmiConfig = createConfig({
-  chains: [
-    mainnet,
-    sepolia,
-    polygon,
-    polygonMumbai,
-    optimism,
-    optimismGoerli,
-    arbitrum,
-    arbitrumGoerli,
-    customLinea,
-    customLineaTestnet,
-    base,
-    baseGoerli,
-    bsc,
-    bscTestnet,
-  ],
+  chains: [sepolia, hederaTestnet, rootstockTestnet, kinto],
   connectors,
   transports,
   ssr: true,
