@@ -61,8 +61,14 @@ export const AddUnderwriter: FC<Props> = (props) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} disabled={isPending} onClick={() => addUnderwriter()}>
-            {isPending ? "Confirming..." : "Add"}
+          <Button
+            colorScheme="blue"
+            mr={3}
+            isLoading={isPending}
+            loadingText={"Confirming"}
+            onClick={() => addUnderwriter()}
+          >
+            Add
           </Button>
           <Button variant="ghost" onClick={props.onClose}>
             Close

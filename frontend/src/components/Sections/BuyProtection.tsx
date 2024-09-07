@@ -10,20 +10,36 @@ import {
   Tr,
   Th,
   Tbody,
-  Td,
   useColorMode,
-  Button,
-  useDisclosure,
 } from "@chakra-ui/react";
+import type { BaseError } from "viem";
+import { useChainId, useReadContract } from "wagmi";
 
-import { PolicyCheckout } from "../Modal/PolicyCheckout";
-import { PolicyDetails } from "../Modal/PolicyDetails";
+import poolFactoryAbi from "../../../artifacts/PoolFactory.sol/PoolFactory.json";
+import { PoolPolicies } from "../PoolPolicies/PoolPolicies";
+import { broadCastDetails } from "@/broadcastDetails";
 import styles from "@/styles/mainPane.module.css";
 
 export const BuyProtection: FC = () => {
   const { colorMode } = useColorMode();
-  const policyDetails = useDisclosure();
-  const policyBuy = useDisclosure();
+
+  const chainId = useChainId();
+
+  const { data, error, isPending } = useReadContract({
+    abi: poolFactoryAbi.abi,
+    address: broadCastDetails.PoolFactory[
+      chainId as unknown as keyof typeof broadCastDetails.PoolFactory
+    ] as `0x${string}`,
+    functionName: "getAllPools",
+  });
+
+  if (isPending) return <div>Loading...</div>;
+
+  if (error) return <div>Error: {(error as unknown as BaseError).details || error.message}</div>;
+
+  const poolData = (data as Array<`0x${string}`>).map((i: `0x${string}`, idx: number) => (
+    <PoolPolicies address={i} key={idx} />
+  ));
 
   return (
     <Box
@@ -33,8 +49,7 @@ export const BuyProtection: FC = () => {
       <Heading as="h2" fontSize={"2rem"} mb={10} className="text-shadow">
         Insurance Policies
       </Heading>
-      <PolicyDetails isOpen={policyDetails.isOpen} onClose={policyDetails.onClose} />
-      <PolicyCheckout isOpen={policyBuy.isOpen} onClose={policyBuy.onClose} />
+
       <Flex className={styles.content}>
         <TableContainer width="90%">
           <Table variant="striped">
@@ -50,7 +65,8 @@ export const BuyProtection: FC = () => {
               </Tr>
             </Thead>
             <Tbody>
-              <Tr>
+              {poolData}
+              {/* <Tr>
                 <Td>
                   <Flex gap={"2"}>
                     <img width={"20"} height={"20"} src="usdc_logo.png" alt="USDC" />
@@ -103,7 +119,7 @@ export const BuyProtection: FC = () => {
                 <Td>
                   <Button onClick={policyBuy.onOpen}>Buy</Button>
                 </Td>
-              </Tr>
+              </Tr> */}
             </Tbody>
           </Table>
         </TableContainer>

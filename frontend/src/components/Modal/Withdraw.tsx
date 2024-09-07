@@ -98,9 +98,10 @@ export const Withdraw: FC<Props> = (props) => {
             colorScheme="blue"
             mr={3}
             onClick={() => withdrawToken()}
-            disabled={withdraw.isPending}
+            isLoading={withdraw.isPending}
+            loadingText={"Confirming"}
           >
-            {withdraw.isPending ? "Confirming..." : "Withdraw"}
+            Withdraw
           </Button>
           <Button variant="ghost" onClick={props.onClose}>
             Close

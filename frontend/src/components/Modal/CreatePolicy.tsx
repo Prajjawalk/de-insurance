@@ -98,8 +98,14 @@ export const CreatePolicy: FC<Props> = (props) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} disabled={isPending} onClick={() => createPolicy()}>
-            {isPending ? "Confirming..." : "Create"}
+          <Button
+            colorScheme="blue"
+            mr={3}
+            isLoading={isPending}
+            loadingText={"Confirming"}
+            onClick={() => createPolicy()}
+          >
+            Create
           </Button>
           <Button variant="ghost" onClick={props.onClose}>
             Close

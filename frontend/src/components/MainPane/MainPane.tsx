@@ -25,9 +25,9 @@ const MainPane: FC = () => {
         <Button colorScheme="blue" size="lg" onClick={() => setPage("claim")}>
           Claim Insurance
         </Button>
-        <Button colorScheme="blue" size="lg" onClick={() => setPage("manage")}>
+        {/* <Button colorScheme="blue" size="lg" onClick={() => setPage("manage")}>
           Manage Policies
-        </Button>
+        </Button> */}
       </Flex>
       <Flex className={styles.content}>
         {page == "provide" ? (

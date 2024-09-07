@@ -113,7 +113,7 @@ export const Deposit: FC<Props> = (props) => {
             <Flex>
               {(isPending ? "loading" : error ? error.message : String(data[0].result)) as string}
             </Flex>
-            {approve.data && <Flex>Transaction Hash: {deposit.data}</Flex>}
+            {approve.data && <Flex>Transaction Hash: {approve.data}</Flex>}
             {approveLoader.isLoading && <Flex>Waiting for confirmation...</Flex>}
             {approveLoader.isSuccess && <Flex>Approval confirmed.</Flex>}
             {approve.error && (
@@ -133,7 +133,8 @@ export const Deposit: FC<Props> = (props) => {
             <Button
               colorScheme="blue"
               mr={3}
-              disabled={approve.isPending}
+              isLoading={approve.isPending}
+              loadingText={"Confirming"}
               onClick={() => approveToken()}
             >
               {approve.isPending ? "Confirming..." : "Approve"}
@@ -142,10 +143,11 @@ export const Deposit: FC<Props> = (props) => {
           <Button
             colorScheme="blue"
             mr={3}
-            disabled={deposit.isPending}
+            isLoading={deposit.isPending}
+            loadingText={"Confirming"}
             onClick={() => depositToken()}
           >
-            {deposit.isPending ? "Confirming..." : "Deposit"}
+            Deposit
           </Button>
           <Button variant="ghost" onClick={props.onClose}>
             Close

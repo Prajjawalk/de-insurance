@@ -82,8 +82,14 @@ export const CreatePool: FC<Props> = (props) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" disabled={isPending} mr={3} onClick={() => createPool()}>
-            {isPending ? "Confirming..." : "Create"}
+          <Button
+            colorScheme="blue"
+            isLoading={isPending}
+            loadingText={"Confirming"}
+            mr={3}
+            onClick={() => createPool()}
+          >
+            Create
           </Button>
           <Button variant="ghost" onClick={props.onClose}>
             Close
