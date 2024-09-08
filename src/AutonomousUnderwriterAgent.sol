@@ -7,7 +7,7 @@ import "./interfaces/IOracle.sol";
 
 // @title CipherAgent
 // @notice This contract handles chat interactions and integrates with teeML oracle for LLM and knowledge base queries.
-contract CipherAgent {
+contract AutonomousUnderwriterAgent {
 
     struct Message {
         string role;

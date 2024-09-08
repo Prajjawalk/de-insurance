@@ -68,7 +68,7 @@ const transports: Record<number, Transport> = {
   [morphHolesky.id]: http(),
 };
 export const wagmiConfig = createConfig({
-  chains: [sepolia, hederaTestnet, rootstockTestnet, kinto],
+  chains: [sepolia, hederaTestnet, rootstockTestnet, kinto, morphHolesky],
   connectors,
   transports,
   ssr: true,
