@@ -9,7 +9,7 @@ import {
 import { privateKeyToAccount } from 'viem/accounts';
 import { hederaTestnet } from 'viem/chains';
 
-import poolAbi from "../../../artifacts/PoolFactory.sol/PoolFactory.json"
+import poolAbi from "../../frontend/artifacts/PoolFactory.sol/PoolFactory.json"
 
 const logger = await createLogger({
     scriptId: 'tokenHscs',
