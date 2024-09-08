@@ -17,7 +17,7 @@ We have used Omnichain ERC4626 vaults powered by LayerZero to create insurance p
 
 ## Networks deployed
 
-Rootstock Testnet - 0x4dE326ed0f0779156f8e9EcA82A8d6Ced865Cc7B
-Morph Testnet - 0x605267a087f335C7F9e027e216f100fB244D08B9
-Kinto Testnet - 0x698aEc8693fd3E3f694018C8a493411B6cf3B06B
-Hedera Testnet - 0x264f9ef85c21de49451c3636116668889ca41aab
+- Rootstock Testnet - 0x4dE326ed0f0779156f8e9EcA82A8d6Ced865Cc7B
+- Morph Testnet - 0x605267a087f335C7F9e027e216f100fB244D08B9
+- Kinto - 0x698aEc8693fd3E3f694018C8a493411B6cf3B06B
+- Hedera Testnet - 0xD56be976f2EEfC86E33aa3f83E5ACa98cb8D6b40
