@@ -65,10 +65,10 @@ export const PoolPolicies: FC<Props> = (props) => {
         policyId={String(i.id)}
         poolAddress={props.address as `0x${string}`}
         key={idx}
-        price={i.price}
-        validity={i.validityPeriod}
-        maxClaim={i.maxClaim}
-        underwriters={i.minUnderwriters}
+        price={i.price ?? 0n}
+        validity={i.validityPeriod ?? 0n}
+        maxClaim={i.maxClaim ?? 0n}
+        underwriters={i.minUnderwriters ?? 0n}
         tnc={i.terms}
         underlyingtokenAddress={asset.result as `0x${string}`}
       />

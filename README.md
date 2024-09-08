@@ -1,66 +1,23 @@
-## Foundry
+## De-insurance
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+**Decentralised insurance protocol for crypto investors to safeguard them against any blackswan events or hacks.**
 
-Foundry consists of:
+## Project Description
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+We have created a decentralized insurance protocol where crypto investors, LP, bridges, and DEX users can purchase policies to protect themselves against losses from any kind of compromise, hacks or rug pulls.
 
-## Documentation
+- De-insurance enables anybody to create omnichain insurance pools and create policies.
+- Users can buy the policies for certain premiums and file claims onchain in case of compromise.
+- The decentralized network of underwriters is responsible for processing claims and approving them.
+- LP can deposit the liquidity to insurance pools and earn yield overtime
 
-https://book.getfoundry.sh/
+## How it's Made
 
-## Usage
+We have used Omnichain ERC4626 vaults powered by LayerZero to create insurance pools where the LP deposits tokens and gets yields. The policies can be purchased from this pool and if claims are made there exists a set of whitelisted underwriters that are a mix of human and autonomous AI agents who process and underwrite claims. We have used Galadriel agents to permissionlessly process claims. Once approved, the policyholder can withdraw the claim amount from the vault.
 
-### Build
+## Networks deployed
 
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+Rootstock Testnet - 0x4dE326ed0f0779156f8e9EcA82A8d6Ced865Cc7B
+Morph Testnet - 0x605267a087f335C7F9e027e216f100fB244D08B9
+Kinto Testnet - 0x698aEc8693fd3E3f694018C8a493411B6cf3B06B
+Hedera Testnet - 0x264f9ef85c21de49451c3636116668889ca41aab

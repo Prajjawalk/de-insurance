@@ -8,10 +8,12 @@ import { ClaimProtection } from "../Sections/ClaimProtection";
 import { ManagePolicies } from "../Sections/ManagePolicies";
 import { ProvideProtection } from "../Sections/ProvideProtection";
 import styles from "@/styles/mainPane.module.css";
+import { useAccount } from "wagmi";
 
 const MainPane: FC = () => {
   const [page, setPage] = useState("buy");
   const [pool, setPool] = useState<string>();
+  const { isConnected } = useAccount();
 
   return (
     <Flex alignItems="start" gap="1rem" margin="auto">
@@ -29,17 +31,21 @@ const MainPane: FC = () => {
           Manage Policies
         </Button> */}
       </Flex>
-      <Flex className={styles.content}>
-        {page == "provide" ? (
-          <ProvideProtection setpage={setPage} setPool={setPool} />
-        ) : page == "buy" ? (
-          <BuyProtection />
-        ) : page == "claim" ? (
-          <ClaimProtection />
-        ) : (
-          <ManagePolicies setpage={setPage} pool={pool as string} />
-        )}
-      </Flex>
+      {isConnected ? (
+        <Flex className={styles.content}>
+          {page == "provide" ? (
+            <ProvideProtection setpage={setPage} setPool={setPool} />
+          ) : page == "buy" ? (
+            <BuyProtection />
+          ) : page == "claim" ? (
+            <ClaimProtection />
+          ) : (
+            <ManagePolicies setpage={setPage} pool={pool as string} />
+          )}
+        </Flex>
+      ) : (
+        <Flex>Please connect wallet to proceed</Flex>
+      )}
     </Flex>
   );
 };
